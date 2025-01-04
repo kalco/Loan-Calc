@@ -1,4 +1,4 @@
-﻿import sys
+﻿import sys, os
 from PyQt5.QtGui import QDoubleValidator, QFont, QIcon
 from PyQt5.QtWidgets import (
     QApplication, QVBoxLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QWidget, QFrame, QTabWidget
@@ -15,7 +15,14 @@ def custom_round(value):
 class LoanCalculatorApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon("icon.ico"))
+        if getattr(sys, 'frozen', False):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+
+        icon_path = os.path.join(base_path, "icon.ico")
+
+        self.setWindowIcon(QIcon(icon_path))
         self.initUI()
 
     def initUI(self):
@@ -40,7 +47,7 @@ class LoanCalculatorApp(QWidget):
         tab1_layout = QVBoxLayout()
 
         disclaimer_label = QLabel(
-"<b>Важно:</b> Пресметката важи за заем склучен во ануитети со фиксна каматна стапка. Може да има занемарливи разлики во споредба со фактичката пресметка кај поединечни банки, во зависност од методите за пресметка на каматата. Целта на пресметката е да се овозможи и да се дојде до заклучок за профитабилноста на еднократната отплата на заемот. <br /><i>Внесете ги вашите кредитни информации за да ја добиете вашата пресметка.</i>")
+        "<b>Важно:</b> Пресметката важи за заем склучен во ануитети со фиксна каматна стапка. Може да има занемарливи разлики во споредба со фактичката пресметка кај поединечни банки, во зависност од методите за пресметка на каматата. Целта на пресметката е да се овозможи и да се дојде до заклучок за профитабилноста на еднократната отплата на заемот. <br /><i>Внесете ги вашите кредитни информации за да ја добиете вашата пресметка.</i>")
         disclaimer_label.setWordWrap(True)
         tab1_layout.addWidget(disclaimer_label)
 
