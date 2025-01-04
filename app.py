@@ -1,7 +1,7 @@
 ﻿import sys, os
 from PyQt5.QtGui import QDoubleValidator, QFont, QIcon
 from PyQt5.QtWidgets import (
-    QApplication, QVBoxLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QWidget, QFrame, QTabWidget
+    QApplication, QVBoxLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QWidget, QFrame, QTabWidget, QScrollArea, QDesktopWidget
 )
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -27,7 +27,8 @@ class LoanCalculatorApp(QWidget):
 
     def initUI(self):
         self.setWindowTitle("Кредитен Калкулатор")
-        self.setFixedSize(700, 800)
+        self.resize(700, 800)
+        self.setMinimumSize(500, 600)
 
         self.tabs = QTabWidget()
 
@@ -40,8 +41,29 @@ class LoanCalculatorApp(QWidget):
         self.tabs.addTab(self.tab2, "Графикони")
 
         main_layout = QVBoxLayout()
-        main_layout.addWidget(self.tabs)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.addWidget(self.tabs)
+        scroll_area.setWidget(scroll_content)
+
+        main_layout.addWidget(scroll_area)
         self.setLayout(main_layout)
+
+        self.adjust_ui_to_screen()
+
+    def adjust_ui_to_screen(self):
+        screen = QDesktopWidget().screenGeometry()
+        width, height = screen.width(), screen.height()
+
+        if height < 800:
+            self.additional_frame.setVisible(False)
+            self.setFixedSize(500, 600)
+        else:
+            self.additional_frame.setVisible(True)
+            self.setFixedSize(700, 800) 
 
     def init_tab1(self):
         tab1_layout = QVBoxLayout()
